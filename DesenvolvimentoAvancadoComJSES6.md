@@ -81,23 +81,40 @@ function multiply (a,b = randNumber())
   return a*b; 
 }
 console.log(multiply(2,undefined)); /// resultado aleatório só invocará a função randNumber caso não haja parametro2 
-
 ```
+
 ### 1.3 Enhanced Object Literals 
 
-
-
-
-
-
+um objeto pode ter métodos 
 ```javascript
+var obj = {
+  sum:  function (a,b) { return a+ b; } /// poderia ser sum:  function batata(a,b) { return a+ b; } 
+}; 
+console.log(obj.sum(1,2));
 ```
 
+No ES6 Quando a propriedade do objeto é igual a uma variavel , podemos omitir o prop1 : prop1 dentro do obj 
 ```javascript
+var prop1 = 'bla bla'; 
+var obj = {
+  prop1
+}; 
+console.log (obj.prop1); /// bla bla 
 ```
 
+Também funciona com métodos 
+
 ```javascript
+function metodo1(){
+  console.log('bla bla'); 
+}
+var obj = {
+  metodo1
+}; 
+obj.metodo1(); /// bla bla 
 ```
+
+
 
 ```javascript
 ```
