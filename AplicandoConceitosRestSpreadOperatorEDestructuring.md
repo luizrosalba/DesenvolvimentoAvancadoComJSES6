@@ -128,23 +128,76 @@ obj2.test = 456 ;
 console.log(obj);/// 123  nao alterou o objeto inicial
 ```
 
+## 2.2 Destructuring em React.js (imutável) 
+utilizado para destruir arrays com uma notação enxuta 
 
 ```Javascript
+var arr = ['apple','banana','orange',['Tomato']];
+
+var apple=arr[0];
+var banana=arr[1];
+var orange=arr[2];
+var tomato=arr[3][0];
+/// com destruction 
+var [apple2,banana2,orange2,[tomato2]] =   [
+  'apple',
+  'banana',
+  'orange',
+  ['tomato']]; /// notacao é mais enxuta 
+
 
 ```
 
+O mesmo pode ser feito com objetos  
 ```Javascript
+var obj  = {
+  name:'Celso'
+}
+ /// sem destruction name = obj.name;  
+var {name} = obj /// destroi o objeto , procura a propriedade name e pega seu valor 
+console.log(name); 
+
+```
+Destruindo e logo em seguida atribuindo a outra variável 
+```Javascript
+var obj  = {
+  name:'Celso'
+}
+var {name:name2} = obj
+console.log(name2); 
 ```
 
+Também pode ser feito com nestes props 
 ```Javascript
+var obj  = {
+  name:'Celso',
+  props:{
+    age:26
+  }
+}
+
+//var age = obj.prop.age;  antigo 
+var {props:{age}} = obj;  /// com destruction 
+console.log(age); 
+
 ```
+Posso acessar diretamente uma propriedade de um objeto e customizar seu nome 
 
 ```Javascript
-```
+var arr = [ {name: 'apple' , type : 'fruit'}] ; 
 
+var [{name:fruitname,type}]=arr; 
+console.log(fruitname,type); 
+
+```
+Demonstrando a destrução como argumento com default values de uma função 
 ```Javascript
+function sum([a,b]=[0,0]){
+  return a + b; 
+} 
+console.log(sum([5,5]));  ///10 
+console.log(sum([5]));  /// NAn ?  
 ```
-
 
 
 
