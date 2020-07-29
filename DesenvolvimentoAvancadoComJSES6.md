@@ -1,7 +1,7 @@
 ## Funções avançadas do ES6
 
 ### 1.1 Arrow function 
-O arrow function veio para solucionar o problema do contexto no qual ele é realizado. Antes do ES6, haviam algumas situações onde o contexto (this) poderia ser ambíguo (criar confusão sobre a qual objeto o this está se referindo) . Arrow functions tem o contexto igual ao código que o envolve , o this se referencia as chaves do arrow function . 
+O arrow function traz funções anonimas e veio para solucionar o problema do contexto no qual ele é realizado. Antes do ES6, haviam algumas situações onde o contexto (this) poderia ser ambíguo (criar confusão sobre a qual objeto o this está se referindo) . Arrow functions tem o contexto igual ao código que o envolve , o this se referencia as chaves do arrow function . 
 
 
 Se houver apenas um argumento e uma expressao (que não seja destruction ou rest operator (...) )
@@ -93,6 +93,16 @@ var obj = {
 console.log(obj.sum(1,2));
 ```
 
+Também pode ser declarado como 
+```javascript
+var obj = {
+  sum(a,b) { return a+ b; }
+}; 
+
+console.log(obj.sum(1,2)); /// 3 
+```
+
+
 No ES6 Quando a propriedade do objeto é igual a uma variavel , podemos omitir o prop1 : prop1 dentro do obj 
 ```javascript
 var prop1 = 'bla bla'; 
@@ -114,10 +124,18 @@ var obj = {
 obj.metodo1(); /// bla bla 
 ```
 
-
+No ES6 podemos também usar variaveis e até concatenar o nome da propriedade de um objeto 
 
 ```javascript
+var propName ='test'; 
+
+var obj = {
+  [propName + 'concat']: 'prop value' 
+}; 
+
+console.log(obj);
 ```
+
 
 ```javascript
 ```
