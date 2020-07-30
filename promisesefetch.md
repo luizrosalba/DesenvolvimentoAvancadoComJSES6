@@ -53,6 +53,7 @@ function doAll()
 
 doAll();
 ```
+### Promise
 Uma Promisse pode ter 3 estados : Pending (em execução ), Fulfilled (terminou de executar)  e Reject (caso ocorra algum erro) . Uma grande vantagem da  promise é que já faz o tratamento do erro conforme abaixo 
 ////1000 = 1ms 
 ```Javascript  
@@ -331,7 +332,7 @@ fetch('http:localhost:8080/data.json',{
         console.log("Erro de rede",err);
    });
 ```
-Async 
+### Async 
 ```Javascript
 ```
 
