@@ -436,5 +436,83 @@ simpleFunc()
 
 ```
 
+### Aplicando e praticando os conceitos - event emiter 
+Programação asíncrona dentro do node . Event emiter é exclusivo do node . 
+para utiliza-lo promeiro temos que importar a classe event emiter do módulo events. 
+Ao emitir o evento , o emiter o consumiu 
+
+```Javascript
+const EventEmitter = require('events');
+
+const emitter = new EventEmitter ();
+
+emitter.on('User logged',data => {
+    console.log(data); 
+});
+
+emitter.emit('User logged' , {user : 'Celso' });
+```
+Extendendo uma classe 
+```Javascript
+const EventEmitter = require('events');
+
+class Users extends EventEmitter{
+    userLogged(data){
+        this.emit('User loged',data);
+    }
+}
+
+const users = new Users ();
+
+users.on('User logged',data => {
+    console.log(data); 
+});
+
+users.userLogged({user : "Luiz "}); 
+```
+Trava o segundo login , users.once só permite 1 login 
+```Javascript
+const EventEmitter = require('events');
+
+class Users extends EventEmitter{
+    userLogged(data){
+        this.emit('User loged',data);
+    }
+}
+
+const users = new Users ();
+
+users.once('User logged',data => {
+    console.log("Ola" + data); 
+});
+
+users.userLogged({user : "Luiz "}); 
+users.userLogged({user : "joao "}); 
+```
+Lidando com programação asincrona 
+```Javascript
+const EventEmitter = require('events');
+
+class Users extends EventEmitter{
+    userLogged(data){
+        setTimeout(()=>{
+        this.emit('User loged',data);
+    },2000);
+    } 
+}
+
+const users = new Users ();
+
+users.on('User logged',data => {
+    console.log("Ola" + data); 
+});
+
+users.userLogged({user : "Luiz "}); 
+users.userLogged({user : "joao "}); 
+```
+Event target trabalha com a api do browser eventListner
+```Javascript
+```
+
 ```Javascript
 ```
