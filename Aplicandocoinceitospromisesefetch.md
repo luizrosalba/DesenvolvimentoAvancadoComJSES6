@@ -258,6 +258,8 @@ Promise.race([doSomethingPromise(),doOtherThingPromise()]).then(data => {
   console.log(data);
 });
 ```
+
+## 4.2 Fetch Async await Eventemmiter
 ```Javascript
 ```
 ```Javascript
