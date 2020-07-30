@@ -332,20 +332,108 @@ fetch('http:localhost:8080/data.json',{
         console.log("Erro de rede",err);
    });
 ```
-### Async 
+### Async / Await
+A partir do ES7 , forma de criar promises de maneira mais simples e lidar com promises dentro de promises de maneira mais simples 
+O programa abaixo retorna uma promise já resolvida 
 ```Javascript
-```
+const simpleFunc = async ()=> {
+  return 12345;
+};
 
-```Javascript
+console.log(simpleFunc().then(data=>{
+  console.log(data); 
+} ));
+console.log(simpleFunc());
 ```
-
+Tratando erros 
 ```Javascript
+const simpleFunc = async ()=> {
+  throw new Error ('oh no'); 
+  return 12345;
+};
+
+simpleFunc()
+  .then(data=>{
+  console.log(data); 
+} )
+.catch(err=>{
+  console.log(err);
+});
+
 ```
-
+Await : Espera que outras promises sejam resolvidas. O await aguardou a resolução da promise e retorno o dado 
 ```Javascript
+const asyncTimer = () => new Promise((resolve,reject)=> {
+  setTimeout(()=> {
+    resolve(12345);
+  },1000);
+});
+
+
+const simpleFunc = async ()=> {
+  const data = await asyncTimer();
+  return data;
+};
+
+simpleFunc()
+  .then(data=>{
+  console.log(data); 
+} )
+.catch(err=>{
+  console.log(err);
+});
+
 ```
-
+Await pode tornar o processamento asíncrono sequencial 
 ```Javascript
+const asyncTimer = () => new Promise((resolve,reject)=> {
+  setTimeout(()=> {
+    resolve(12345);
+  },1000);
+});
+
+
+const simpleFunc = async ()=> {
+  const data = await asyncTimer();
+  console.log(data);
+  const dataJSON = await fetch ('/data.json').then(resStream=> 
+    resStream.json()
+    );
+  return dataJSON;
+};
+
+simpleFunc()
+  .then(data=>{
+  console.log(data); 
+} )
+.catch(err=>{
+  console.log(err);
+});
+```
+Processando de maneira paralela 
+```Javascript
+const asyncTimer = () => new Promise((resolve,reject)=> {
+  setTimeout(()=> {
+    resolve(12345);
+  },1000);
+});
+
+
+const simpleFunc = async ()=> {
+  const data = await Promise.all([
+      asyncTimer(),
+      fetch ('/data.json').then(resStream=> resStream.json())])
+  return data;
+};
+
+simpleFunc()
+  .then(data=>{
+  console.log(data); 
+} )
+.catch(err=>{
+  console.log(err);
+});
+
 ```
 
 ```Javascript
