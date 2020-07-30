@@ -260,13 +260,92 @@ Promise.race([doSomethingPromise(),doOtherThingPromise()]).then(data => {
 ```
 
 ## 4.2 Fetch Async await Eventemmiter
+
+Fetch é uma nova API com o mesmo intuito da antiga xmlhttpRequest , fazer requisições, mas utiliza promises 
+Fetch retorna uma promise . O exemplo mostra uma requisição  
+```Javascript
+fetch('/data.json').then(responseStream=>{
+   responseStream.json().then(data=>{
+       console.log(data);
+   });
+  })
+
+```
+Caso haja um erro de rede será pego no catch 
+```Javascript
+fetch('http:localhost:8081/data.json') /// erro de rede nao existe esta porta 
+.then(responseStream=> responseStream.json())
+.then(data=>{
+       console.log(data);
+   }).catch(err=> {
+        console.log("Erro de rede",err);
+   });
+  
+
+```
+Outro exemplo , agora com erro de nome de arquivo inexistente 
+```Javascript
+fetch('http:localhost:8080/datassss.json') /// erro de fim inesperado de input json
+.then(responseStream=> responseStream.json())
+.then(data=>{
+       console.log(data);
+   }).catch(err=> {
+        console.log("Erro de rede",err);
+   });
+
+```
+Tratando o erro para nao tentar parsear para json 
+```Javascript
+fetch('http:localhost:8080/data222.json') 
+.then(responseStream => {
+    console.log(responseStream)
+    if(responseStream.status===200){
+        return responseStream.json();
+    }else {
+        throw new Error('Request error');
+    }
+})
+.then(data=>{
+       console.log(data);
+   }).catch(err=> {
+        console.log("Erro de rede",err);
+   });
+```
+por default o segundo parametro do fetch eh um get. mas podemos forçar um post 
+```Javascript
+fetch('http:localhost:8080/data.json',{
+    method:'post',
+    body:JSON.stringfy
+}) /// erro de fim inesperado de input json
+.then(responseStream => {
+    console.log(responseStream)
+    if(responseStream.status===200){
+        return responseStream.json();
+    }else {
+        throw new Error('Request error');
+    }
+})
+.then(data=>{
+       console.log(data);
+   }).catch(err=> {
+        console.log("Erro de rede",err);
+   });
+```
+Async 
 ```Javascript
 ```
+
 ```Javascript
 ```
+
 ```Javascript
 ```
+
 ```Javascript
 ```
+
+```Javascript
+```
+
 ```Javascript
 ```
