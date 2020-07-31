@@ -78,7 +78,7 @@ describe ('Math class',function (){
    it('Sum two Numbers',function () /// it descreve o comportamento esperado 
    {
         const math = new Math();
-        assert.equal(math.sum(5,5),10);
+        assert.equal(math.sum(5,5),10); /// valida se dois valores sao iguais 
    });  
 });
 
@@ -92,14 +92,74 @@ class Math {
 module.exports =Math; 
 ```
 rodei o npm run test 
+erro -> undefined ==10 o teste executado deveria retornar 10 e  retorna undefined. 
+
+Acertando a classe math para fazer a conta corretamente 
+```Javascript
+class Math {
+   sum = function sum(a,b){return a+b };
+}
+
+module.exports =  Math;  /// o mocha nao retorna mais o erro 
+```
+Limpando a classe (TDD) também chamada de refatorar 
+```Javascript
+class Math {
+   sum(a,b){return a+b };
+}
+
+module.exports =  Math; 
+```
+Tornando math assíncrona 
+```Javascript
+class Math {
+   sum(a,b,callback){
+      setTimeout(() => {
+         callback(a+b);
+      },0);
+   };
+}
+module.exports =  Math; 
+```
+e alterando mathspec para chamada assíncrona 
+```Javascript
+const assert = require('assert');
+const Math = require ('../src/math.js');
+
+describe ('Math class',function (){ 
+   it('Sum two Numbers',function () /// it descreve o comportamento esperado 
+   {
+        const math = new Math();
+        math.sum(5,5,(value)=>
+        {
+            assert.equal(value,10); /// valida se dois valores sao iguais 
+        })
+          
+   });  
+});
+
+
+```
+
 ```Javascript
 ```
+
 ```Javascript
 ```
+
+
 ```Javascript
 ```
+
+
 ```Javascript
 ```
+
+
+```Javascript
+```
+
+
 ```Javascript
 ```
 
