@@ -121,7 +121,7 @@ class Math {
 }
 module.exports =  Math; 
 ```
-e alterando mathspec para chamada assíncrona 
+e alterando mathspec para chamada assíncrona , percebemos que o código continua passando  , pois é assíncrono (no meu , diferente do vídeo,  talvez por ser uma versão mais atual, já mostra erros de validação) 
 ```Javascript
 const assert = require('assert');
 const Math = require ('../src/math.js');
@@ -140,29 +140,268 @@ describe ('Math class',function (){
 
 
 ```
+Precisamos então de uma maneira de validar valores assíncronos usando mocha 
+Acrescente done no argumento da funcao dentro do it . atenção ! moca recomenda nao usar arrow fucntion 
 
 ```Javascript
+const assert = require('assert');
+const Math = require ('../src/math.js');
+
+describe ('Math class',function (){ 
+   it('Sum two Numbers',function (done) /// it com done aguarda o done ser invocado 
+   {
+        const math = new Math();
+        this.timeout(3000); /// por isso nao usamos arrow function para 
+                            /// poder usar o this deste contexto , se usassemos arrow 
+                            ///function o this se referenciaria ao describe 
+        math.sum(5,5,(value)=>
+        {
+            assert.equal(value,10); /// valida se dois valores sao iguais 
+            done();
+        })
+   });  
+});
+
 ```
+Escrevendo testes para funcoes que ainda nao existem 
+```Javascript
+const assert = require('assert');
+const Math = require ('../src/math.js');
+
+describe ('Math class',function (){ 
+   it('Sum two Numbers',function (done) /// it com done aguarda o done ser invocado 
+   {
+        const math = new Math();
+        this.timeout(3000); /// por isso nao usamos arrow function para 
+                            /// poder usar o this deste contexto 
+        math.sum(5,5,(value)=>
+        {
+            assert.equal(value,10); /// valida se dois valores sao iguais 
+            done();
+        })
+   });  
+   it ('Multiply two numbers '); /// teste pendente 
+});
+
+```
+it.only executa somente este teste 
 
 ```Javascript
+it.only ('Multiply two numbers',function(){
+       const math = new Math();
+       assert.equal(math.multiply(5,5),25);
+   });
 ```
-
+it.skip pula o teste 
 
 ```Javascript
+  it.skip ('Multiply two numbers',function(){
+       const math = new Math();
+       assert.equal(math.multiply(5,5),25);
+   });
 ```
 
+mocha hooks (before each)  
+executa codigo e evita repetições 
+outros hooks : before , after e afterEach 
+```Javascript
+
+const assert = require('assert');
+const Math = require ('../src/math.js');
+
+let value =0; 
+
+describe ('Math class',function (){ 
+    ///hook 
+    beforeEach(function (){
+        value = 0; 
+    });
+
+
+   it('Sum two Numbers',function (done) /// it com done aguarda o done ser invocado 
+   {
+        const math = new Math();
+        this.timeout(3000); /// por isso nao usamos arrow function para 
+                            /// poder usar o this deste contexto 
+        
+        value =5; 
+
+        math.sum(value,5,(value)=>
+        {
+            assert.equal(value,10); /// valida se dois valores sao iguais 
+            done();
+        });
+   });  
+   it ('Multiply two numbers',function(){
+       const math = new Math();
+       assert.equal(math.multiply(value,5),0);
+   });
+});
+```
+
+### 5.3 Chai 
+O moca nao possui uma ferramenta de assert. Ele usa uma ferramenta built in do node. 
+O assert nao eh tao legíveis (os its, describes)  na hora de comparar objetos. Para melhroar isso usamos o chai https://www.chaijs.com/api/
+npm i --save-dev chai 
+que é uma ferramenta de asserts tornando os testes mais descritivos 
 
 ```Javascript
-```
+const assert = require('assert');
+const Math = require ('../src/math.js');
+const expect = require ('chai').expect;
 
+let value =0; 
+
+describe ('Math class',function (){ 
+    ///hook 
+    beforeEach(function (){
+        value = 0; 
+    });
+
+
+   it('Sum two Numbers',function (done) /// it com done aguarda o done ser invocado 
+   {
+        const math = new Math();
+        this.timeout(3000);         
+        value =5; 
+
+        math.sum(value,5,(value)=>
+        {
+            expect(value).to.equal(10); /// mais legível 
+            done();
+        });
+   });  
+   it ('Multiply two numbers',function(){
+       const math = new Math();
+       expect(math.multiply(value,5)).to.equal(0); /// mais legível 
+   });
+});
+
+
+```
+Utilizando para validar objetos 
 
 ```Javascript
-```
+ it ('Multiply two numbers',function(){
+       const math = new Math();
+       const obj = {
+           name : 'Luiz'
+       };
 
+       expect(obj).to.have.property('name'); /// mais legível 
+   });
+```
+Comparando objetos , cuidado ! 
 
 ```Javascript
+  it.only ('Multiply two numbers',function(){
+       const math = new Math();
+       const obj = {
+           name : 'Luiz'
+       };
+       const obj2 = {
+        name : 'Luiz'
+    };
+    /// const obj2=obj; /// tornaria a comparação verdadeira 
+       expect(obj).to.equal(obj2); /// problemas pois a referencia eh diferente  
+       ///expect(obj).to.deep.equal(obj2); /// seriam iguals to deep faz uma comparação dos valores dos objetos 
+   });
 ```
+### 5.4 Sinon
+útil para testar métodos de objetos. Adicionei o método printSum na classe math como testar ? 
 
+```Javascript
+class Math {
+   sum(a,b,callback){
+      setTimeout(() => {
+         callback(a+b);
+      },0);
+   };
+
+   multiply(a,b){
+      return(a*b);      
+   };
+   printSum(req,res,a,b){
+      res.load('index',a+b);
+   };
+
+}
+
+module.exports =  Math; 
+```
+Adicionar uma função espiã que diz se o método foi invocado (spy) na propriedade load do objeto res 
+
+```Javascript
+it.only ('Calls req with sum and index values ',function(){
+    const req= {};
+    const res = {
+        load:sinon.spy()
+    };
+    const math = new Math();
+    math.printSum(req,res,5,5);
+    expect(res.load.calledOnce).to.be.true;
+
+```
+Verificando se o primeiro argumento é index 
+
+```Javascript
+   it.only ('Calls req with sum and index values ',function(){
+    const req= {};
+    const res = {
+        load:sinon.spy()
+    };
+    const math = new Math();
+    math.printSum(req,res,5,5);
+    expect(res.load.args[0][0]).to.be.equal('index');
+ });
+```
+Verificando se o segundo argumento é soma 
+```Javascript
+   it.only ('Calls req with sum and index values ',function(){
+    const req= {};
+    const res = {
+        load:sinon.spy()
+    };
+    const math = new Math();
+    math.printSum(req,res,5,5);
+    expect(res.load.args[0][1]).to.be.equal(10);
+ });
+```
+Confirma que o método nao foi chamado (stub) 
+```Javascript
+
+   it.only ('Calls req with sum and index values ',function(){
+    const req= {};
+    const res = {
+        load : function load(){
+            console.log('called');
+        }
+    };
+    sinon.stub(res,'load');
+    const math = new Math();
+    math.printSum(req,res,5,5);
+    expect(res.load.args[0][0]).to.be.equal('index');
+ });
+
+```
+Passou pela checagem 
+```Javascript
+ it.only ('Calls req with sum and index values ',function(){
+    const req= {};
+    const res = {
+        load : function load(){
+            console.log('called');
+        }
+    };
+    sinon.stub(res,'load').returns('xadsa');
+    const math = new Math();
+    math.printSum(req,res,5,5);
+    expect(res.load.args[0][0]).to.be.equal('index');
+ });
+
+```
+```Javascript
+```
 
 
 
